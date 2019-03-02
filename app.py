@@ -10,6 +10,7 @@ class ContactApp(cmd.Cmd):
 	intro = "\nContacts App\n"
 	prompt = "> "
 	cl = None
+	
 	def do_save(self, line):
 		"""Saves new book in specified location"""
 		if isinstance(self.cl, Book):
@@ -62,6 +63,7 @@ class ContactApp(cmd.Cmd):
 			print("To delete contacts you need to open or create a book.")
 
 	def do_fsearch(self, line):
+		"""Searches contacts by any field using regular expressions (Case sensitive)."""
 		if isinstance(self.cl, Book):
 			st = time()
 			print("\nSearch results for: ",str(line))
@@ -142,6 +144,7 @@ class ContactApp(cmd.Cmd):
 		print('\n')
 
 	def do_add10000users(self, line):
+		"""Adds 10000 test users to your current book"""
 		if isinstance(self.cl, Book):
 			try:
 				self.cl.add_10000contacts(str(line))
@@ -149,12 +152,20 @@ class ContactApp(cmd.Cmd):
 				print("There is no such file!")
 
 	def do_len(self, line):
-		print(len(self.cl.data))
+		"""Returns number of users in current book"""
+		if isinstance(self.cl, Book):
+			print(len(self.cl.data))
+		else:
+			print("To get number of contacts you need to open or create book")
 
 	def do_EOF(self, line):
 		return True
 
 	def do_quit(self, line):
+		if isinstance(self.cl, Book):
+			answer = input("Do you want to save changes to your book? (y/n) ")
+			if answer.lower() == 'y':
+				self.do_close(line)
 		return self.do_EOF(line)
 
 	def do_postloop(self):
